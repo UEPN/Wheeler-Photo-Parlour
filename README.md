@@ -1,29 +1,42 @@
+<div align="center">
+
+<img src="https://github.com/user-attachments/assets/2d2c990a-ab4a-4e2d-81b5-f90451a507a6" width="96" />
+
 # 惠勒照相馆
 
-[English](README_EN.md) | [![License](https://img.shields.io/badge/License-GPL%20v3.0-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+一款复古风格的照片浏览与导出工具，专为《荒野大镖客：救赎 2》玩家打造
+
+[![License](https://img.shields.io/badge/License-GPL%20v3.0-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![.NET](https://img.shields.io/badge/.NET-8.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
 
-一款复古风格的照片浏览与导出工具，专为《荒野大镖客：救赎 2》玩家打造。
+[English](README_EN.md) · [下载](https://github.com/UEPN/Wheeler-Photo-Parlour/releases) · [反馈问题](https://github.com/UEPN/Wheeler-Photo-Parlour/issues)
 
-[主界面预览]<img width="2560" height="1440" alt="WheelerPhotoParlour1" src="https://github.com/user-attachments/assets/d22f44ee-3653-47f9-ad77-928157c93aed" />
+</div>
 
+---
 
+<div align="center">
 
+<img src="https://github.com/user-attachments/assets/d22f44ee-3653-47f9-ad77-928157c93aed" width="600" />
+
+主界面预览
+
+</div>
 
 ---
 
 ## 功能特性
 
-- **一键扫描** — 自动定位 RDR2 照片存档目录，无需手动翻找
-- **缩略图预览** — 流畅的照片列表浏览，异步加载不卡顿
-- **高清预览** — 点击缩略图即可查看完整照片，支持 F11 全屏欣赏
-- **批量导出** — 打包为 ZIP 影集，或逐帧导出到文件夹
-- **自选冲印** — 勾选想要的底片，只导出精选照片
+- **一键扫描** — 自动定位 RDR2 照片存档目录
+- **缩略图预览** — 流畅浏览，异步加载不卡顿
+- **高清预览** — 点击缩略图查看完整照片，F11 全屏显示
+- **批量导出** — 打包为 ZIP 影集或导出到文件夹
+- **自选冲印** — 勾选想要的底片，只导出精选
 - **单帧导出** — 导出当前选中的单张照片
-- **安全删除** — 不想要的底片可移至回收站，而非永久删除
-- **中英双语** — 一键切换界面语言，沉浸式西部牛仔风格文案
-- **复古主题** — 深红暗金的西部复古 UI，契合 RDR2 视觉风格
+- **安全删除** — 移至回收站，不永久删除
+- **中英双语** — 一键切换界面语言
+- **复古主题** — 深红暗金西部风格 UI
 
 ---
 
@@ -40,20 +53,15 @@
 
 ### 方式一：下载发布版（推荐）
 
-1. 从 [Releases](https://github.com/UEPN/Wheeler-Photo-Parlour-/releases) 页面下载最新版本的 `WheelerPhotoParlour.exe`
+1. 从 [Releases](https://github.com/UEPN/Wheeler-Photo-Parlour/releases) 页面下载最新版本
 2. 确保已安装 [.NET 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
 3. 双击运行即可
 
 ### 方式二：自行编译
 
 ```bash
-# 克隆仓库
-git clone https://github.com/UEPN/Wheeler-Photo-Parlour-.git
-
-# 进入项目目录
-cd Wheeler-Photo-Parlour-/WheelerPhotoParlour-SourceOnly
-
-# 编译
+git clone https://github.com/UEPN/Wheeler-Photo-Parlour.git
+cd Wheeler-Photo-Parlour/WheelerPhotoParlour
 dotnet build
 
 # 或发布为单文件
@@ -119,9 +127,12 @@ dotnet publish -c Release
 
 ## 反馈与支持
 
-如有问题或建议，请在 [GitHub Issues](https://github.com/UEPN/Wheeler-Photo-Parlour-/issues) 提交。
+如有问题或建议，请在 [GitHub Issues](https://github.com/UEPN/Wheeler-Photo-Parlour/issues) 提交。
 
 ---
 
-愿您的西部牛仔梦永不褪色。
+<div align="center">
 
+愿您的西部牛仔梦永不褪色
+
+</div>
