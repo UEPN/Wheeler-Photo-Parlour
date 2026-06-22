@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <AssemblyName>WheelerPhotoParlour</AssemblyName>
+    <RootNamespace>WheelerPhotoParlour</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>Novilune</Authors>
+    <Product>惠勒照相馆 Wheeler Photo Parlour</Product>
+    <Description>惠勒照相馆 —— 一款复古风格的照片浏览与导出工具 / Wheeler Photo Parlour, a vintage-styled photo browser and exporter</Description>
+
+    <!-- 发布配置：体积小的单文件exe，依赖用户系统已安装的.NET运行时 -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="app_icon.jpg" />
+    <Content Include="app_icon.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

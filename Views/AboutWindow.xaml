@@ -1,0 +1,114 @@
+<Window x:Class="WheelerPhotoParlour.Views.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="惠勒公司的百年信誉" 
+        Height="620" Width="480"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Style="{StaticResource AppWindow}"
+        Loaded="OnLoaded">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题区 -->
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}" 
+                BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="0,0,0,3" Padding="20,15">
+            <StackPanel HorizontalAlignment="Center">
+                <Image x:Name="AboutLogo" Width="48" Height="48" Margin="0,0,0,10"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       UseLayoutRounding="True" SnapsToDevicePixels="True"/>
+                <TextBlock x:Name="TitleTextBlock" Style="{StaticResource TitleText}" Text="惠勒照相馆" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="VersionTextBlock" Foreground="{StaticResource TextSecondaryBrush}" 
+                           FontSize="12" Text="Version 1.0" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 内容区 -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="20">
+            <StackPanel>
+                <!-- 项目信息卡片 -->
+                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,15">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="DesignLabelText" Grid.Column="0" Text="项目发起与设计：" 
+                                       Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Width="110"/>
+                            <TextBlock Grid.Column="1" Text="Novilune" 
+                                       Foreground="{StaticResource AccentBrush}" FontSize="13" FontWeight="Bold"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="CodeHostLabelText" Grid.Column="0" Text="代码托管：" 
+                                       Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Width="110"/>
+                            <TextBlock Grid.Column="1" FontSize="13">
+                                <Hyperlink NavigateUri="https://github.com/UEPN" RequestNavigate="OnHyperlinkRequestNavigate">
+                                    https://github.com/UEPN
+                                </Hyperlink>
+                            </TextBlock>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="RepoLabelText" Grid.Column="0" Text="项目地址：" 
+                                       Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Width="110"/>
+                            <TextBlock Grid.Column="1" FontSize="13" TextWrapping="Wrap">
+                                <Hyperlink NavigateUri="https://github.com/UEPN/Wheeler-Photo-Parlour-" RequestNavigate="OnHyperlinkRequestNavigate">
+                                    github.com/UEPN/Wheeler-Photo-Parlour-
+                                </Hyperlink>
+                            </TextBlock>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="LicenseLabelText" Grid.Column="0" Text="开源许可：" 
+                                       Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Width="110"/>
+                            <TextBlock Grid.Column="1" Text="GNU General Public License v3.0" 
+                                       Foreground="{StaticResource TextSecondaryBrush}" FontSize="13"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- 简介卡片 -->
+                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,15">
+                    <TextBlock x:Name="CreditBodyText" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- 免责声明卡片 -->
+                <Border Style="{StaticResource CardBorder}" Padding="15">
+                    <StackPanel>
+                        <TextBlock x:Name="DisclaimerHeaderText" Foreground="{StaticResource AccentBrush}" FontSize="14" FontWeight="Bold" Text="免责声明"/>
+                        <TextBlock x:Name="DisclaimerBodyText" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="CopyrightText" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" 
+                                   Margin="0,12,0,0" TextWrapping="Wrap" Opacity="0.8"
+                                   Text="© 2026 UEPN &amp; Novilune. Licensed under the GNU General Public License v3.0."/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 底部 -->
+        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}" 
+                BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="0,3,0,0" Padding="20,15">
+            <Button x:Name="OkBtn" Content="已知悉" Style="{StaticResource PrimaryButton}"
+                    Click="OnOkClick" HorizontalAlignment="Center"/>
+        </Border>
+    </Grid>
+</Window>
