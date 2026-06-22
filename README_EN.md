@@ -1,29 +1,42 @@
+<div align="center">
+
+<img src="https://github.com/user-attachments/assets/2d2c990a-ab4a-4e2d-81b5-f90451a507a6" width="96" />
+
 # Wheeler Photo Parlour
 
-[中文文档](README.md) | [![License](https://img.shields.io/badge/License-GPL%20v3.0-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+A vintage-styled photo browser and exporter for Red Dead Redemption 2 players
+
+[![License](https://img.shields.io/badge/License-GPL%20v3.0-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![.NET](https://img.shields.io/badge/.NET-8.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
 
-A vintage-styled photo browser and exporter, crafted for **Red Dead Redemption 2** players.
+[中文文档](README.md) · [Download](https://github.com/UEPN/Wheeler-Photo-Parlour/releases) · [Report Issue](https://github.com/UEPN/Wheeler-Photo-Parlour/issues)
 
-[Main Window Preview]<img width="2560" height="1440" alt="WheelerPhotoParlour2" src="https://github.com/user-attachments/assets/2efd6bdc-483a-4bbd-ad74-241da09e48a8" />
+</div>
 
+---
 
+<div align="center">
 
+<img src="https://github.com/user-attachments/assets/2efd6bdc-483a-4bbd-ad74-241da09e48a8" width="600" />
+
+Main Window Preview
+
+</div>
 
 ---
 
 ## Features
 
-- **Auto Scan** — Automatically locate RDR2 photo save directory, no manual searching needed
-- **Thumbnail Preview** — Smooth photo list browsing with async loading, no UI lag
-- **High-Resolution Preview** — Click any thumbnail to view full photo, press F11 for fullscreen
-- **Batch Export** — Pack all photos into a ZIP album, or export each frame to a folder
-- **Selective Printing** — Check the negatives you want, export only your picks
+- **Auto Scan** — Automatically locate RDR2 photo save directory
+- **Thumbnail Preview** — Smooth browsing with async loading
+- **High-Resolution Preview** — Click thumbnail to view full photo, F11 for fullscreen
+- **Batch Export** — Pack into ZIP album or export to folder
+- **Selective Printing** — Check negatives you want, export only picks
 - **Single Frame Export** — Export the currently selected photo
-- **Safe Delete** — Unwanted negatives go to Recycle Bin, not permanently erased
-- **Bilingual UI** — Toggle between Chinese and English with immersive cowboy-style copy
-- **Vintage Theme** — Deep red and gold western UI, matching RDR2's visual style
+- **Safe Delete** — Move to Recycle Bin, not permanent erase
+- **Bilingual UI** — Toggle Chinese/English
+- **Vintage Theme** — Deep red and gold western UI
 
 ---
 
@@ -38,22 +51,17 @@ A vintage-styled photo browser and exporter, crafted for **Red Dead Redemption 2
 
 ## Installation
 
-### Option 1: Download Release (Recommended)
+### Download Release (Recommended)
 
-1. Download `WheelerPhotoParlour.exe` from [Releases](https://github.com/UEPN/Wheeler-Photo-Parlour-/releases)
-2. Ensure [.NET 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) is installed
+1. Download from [Releases](https://github.com/UEPN/Wheeler-Photo-Parlour/releases)
+2. Install [.NET 8.0 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
 3. Double-click to run
 
-### Option 2: Build from Source
+### Build from Source
 
 ```bash
-# Clone the repo
-git clone https://github.com/UEPN/Wheeler-Photo-Parlour-.git
-
-# Enter project directory
-cd Wheeler-Photo-Parlour-/WheelerPhotoParlour-SourceOnly
-
-# Build
+git clone https://github.com/UEPN/Wheeler-Photo-Parlour.git
+cd Wheeler-Photo-Parlour/WheelerPhotoParlour
 dotnet build
 
 # Or publish as single-file exe
@@ -91,7 +99,7 @@ Output will be in `bin/Release/net8.0-windows/win-x64/publish/`.
 
 ## License
 
-Released under the **GNU General Public License v3.0 (GPLv3)**.
+Released under **GNU General Public License v3.0 (GPLv3)**.
 
 - ✅ Free to copy, modify, distribute, **including for commercial use**
 - ✅ Derivative works must also be released under GPLv3, with corresponding source code made available
@@ -119,8 +127,12 @@ See [LICENSE](LICENSE) or the [official GNU GPLv3 text](https://www.gnu.org/lice
 
 ## Feedback & Support
 
-For questions or suggestions, please [open an Issue](https://github.com/UEPN/Wheeler-Photo-Parlour-/issues).
+For questions or suggestions, please [open an Issue](https://github.com/UEPN/Wheeler-Photo-Parlour/issues).
 
 ---
 
-May your cowboy dream never fade.
+<div align="center">
+
+May your cowboy dream never fade
+
+</div>
