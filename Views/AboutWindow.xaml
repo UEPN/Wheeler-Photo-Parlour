@@ -67,7 +67,7 @@
                             <TextBlock x:Name="RepoLabelText" Grid.Column="0" Text="项目地址：" 
                                        Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Width="110"/>
                             <TextBlock Grid.Column="1" FontSize="13" TextWrapping="Wrap">
-                                <Hyperlink NavigateUri="https://github.com/UEPN/Wheeler-Photo-Parlour-" RequestNavigate="OnHyperlinkRequestNavigate">
+                                <Hyperlink NavigateUri="https://github.com/UEPN/Wheeler-Photo-Parlour" RequestNavigate="OnHyperlinkRequestNavigate">
                                     github.com/UEPN/Wheeler-Photo-Parlour
                                 </Hyperlink>
                             </TextBlock>
