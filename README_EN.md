@@ -18,7 +18,7 @@ A vintage-styled photo browser and exporter for Red Dead Redemption 2 players
 
 <div align="center">
 
-<img src="https://github.com/user-attachments/assets/2efd6bdc-483a-4bbd-ad74-241da09e48a8" width="600" />
+<img src="https://github.com/user-attachments/assets/0d16315b-086c-4805-9a97-ccbfcac16740" width="600" />
 
 Main Window Preview
 
