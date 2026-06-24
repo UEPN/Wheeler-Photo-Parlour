@@ -31,8 +31,7 @@ namespace WheelerPhotoParlour.Views
             InitializeComponent();
             PhotoList.ItemsSource = _photos;
 
-            // 必须先加载配置、恢复上次选择的语言，再渲染界面文字，
-            // 否则界面会先按默认中文渲染一次，造成"切换英文后重开还是中文"的假象。
+            // 先加载配置再渲染界面，避免语言切换后重开闪现中文
             ConfigService.Load();
             LocalizationService.RestoreFromConfig();
 
@@ -89,16 +88,51 @@ namespace WheelerPhotoParlour.Views
         {
             if (PhotoList.SelectedItem is PhotoItem item)
             {
-                PhotoInfoText.Text = item.FileName;
+                PhotoInfoText.Text = BuildPhotoInfoText(item);
+                ApplyMetaExtraText(item);
             }
             else
             {
                 EmptyPreviewText.Text = T("EmptyPreviewTitle");
                 PhotoInfoText.Text = T("NoPhotoSelected");
+                PhotoMetaExtraText.Visibility = Visibility.Collapsed;
             }
         }
 
-        // ============ 全屏切换（F11） ============
+        /// <summary>文件名 + 地点（如果有），方便核对地点解析是否成功。</summary>
+        private static string BuildPhotoInfoText(PhotoItem item)
+        {
+            return string.IsNullOrWhiteSpace(item.LocationTitle)
+                ? item.FileName
+                : $"{item.FileName}　📍{item.LocationTitle}";
+        }
+
+        /// <summary>游戏内时间、玩家备注（如果有）填到第二行；都没有就收起。</summary>
+        private void ApplyMetaExtraText(PhotoItem item)
+        {
+            var parts = new List<string>();
+            if (item.GameDateTime.HasValue)
+            {
+                parts.Add($"{T("GameDateTimeLabel")}：{item.GameDateTime.Value:yyyy-MM-dd HH:mm:ss}");
+            }
+            if (!string.IsNullOrWhiteSpace(item.Description))
+            {
+                parts.Add($"{T("DescriptionLabel")}：{item.Description}");
+            }
+
+            if (parts.Count == 0)
+            {
+                PhotoMetaExtraText.Visibility = Visibility.Collapsed;
+                PhotoMetaExtraText.Text = "";
+            }
+            else
+            {
+                PhotoMetaExtraText.Text = string.Join("　", parts);
+                PhotoMetaExtraText.Visibility = Visibility.Visible;
+            }
+        }
+
+        // ============ 全屏切换 ============
 
         private void OnWindowKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -118,22 +152,30 @@ namespace WheelerPhotoParlour.Views
         {
             if (!_isFullScreen)
             {
-                // 进入全屏前记住原始窗口状态与位置尺寸，方便退出时还原
+                // 记住原始窗口状态，退出时还原
                 _previousWindowState = WindowState;
                 _previousWindowStyle = WindowStyle;
                 _previousResizeMode = ResizeMode;
+
+                // 如果当前是最大化，先恢复Normal再取尺寸，否则会把最大化尺寸当成"正常"尺寸
+                // 导致退出全屏后点还原按钮时窗口变得巨大
+                if (_previousWindowState == WindowState.Maximized)
+                {
+                    WindowState = WindowState.Normal;
+                }
+
                 _previousLeft = Left;
                 _previousTop = Top;
                 _previousWidth = Width;
                 _previousHeight = Height;
 
-                // 先恢复到Normal状态再手动指定位置和尺寸，避免Maximized状态下Left/Top/Width/Height设置不生效
+                // 进入全屏
                 WindowState = WindowState.Normal;
                 WindowStyle = WindowStyle.None;
                 ResizeMode = ResizeMode.NoResize;
 
-                // 用整个物理屏幕尺寸（包含任务栏区域）覆盖窗口，而不是WindowState.Maximized
-                // 后者只会铺满"工作区域"（屏幕减去任务栏），无法真正盖住任务栏
+                // 用物理屏幕尺寸覆盖窗口，包含任务栏区域
+                // （Maximized只铺满工作区域，盖不住任务栏）
                 Left = 0;
                 Top = 0;
                 Width = SystemParameters.PrimaryScreenWidth;
@@ -253,7 +295,7 @@ namespace WheelerPhotoParlour.Views
             catch { }
         }
 
-        // ============ 加载照片（搜寻马背上的相机袋） ============
+        // ============ 加载照片 ============
 
         private async Task LoadPhotosAsync()
         {
@@ -294,12 +336,19 @@ namespace WheelerPhotoParlour.Views
                         await Task.Run(() => PhotoService.ConvertToJpg(file, cachePath));
                     }
 
+                    var meta = await Task.Run(() => PhotoService.ExtractMeta(file));
+
                     var item = new PhotoItem
                     {
                         SourcePath = file,
                         CachePath = cachePath,
                         FileName = Path.GetFileName(file),
-                        FileSize = new FileInfo(file).Length
+                        FileSize = new FileInfo(file).Length,
+                        LocationTitle = meta.Title,
+                        Description = meta.Description,
+                        GameDateTime = meta.GameDateTime,
+                        RealWorldDateTime = meta.RealWorldDateTime,
+                        CreatedTime = GetTrustworthyRealTime(file)
                     };
 
                     _ = item.LoadThumbnailAsync();
@@ -335,6 +384,29 @@ namespace WheelerPhotoParlour.Views
             _isLoading = false;
         }
 
+        /// <summary>
+        /// 获取文件的可信真实创建时间，优先用创建时间，不可用则退回最后写入时间。
+        /// </summary>
+        private static DateTime GetTrustworthyRealTime(string filePath)
+        {
+            try
+            {
+                var creationTime = File.GetCreationTime(filePath);
+                var lastWriteTime = File.GetLastWriteTime(filePath);
+
+                // 如果创建时间合理（不是默认值），优先使用
+                if (creationTime != default && creationTime.Year >= 2010)
+                    return creationTime;
+
+                // 否则退回到最后写入时间
+                if (lastWriteTime != default && lastWriteTime.Year >= 2010)
+                    return lastWriteTime;
+            }
+            catch { }
+
+            return File.GetCreationTime(filePath);
+        }
+
         private void ShowNoPhotosFoundDialog()
         {
             System.Windows.MessageBox.Show(
@@ -361,7 +433,7 @@ namespace WheelerPhotoParlour.Views
                 }
                 catch
                 {
-                    // 损坏文件读取失败时静默处理，下方按 null 结果展示报错提示
+                    // 文件损坏，静默处理
                 }
 
                 LoadingPanel.Visibility = Visibility.Collapsed;
@@ -381,8 +453,9 @@ namespace WheelerPhotoParlour.Views
                 PhotoPreview.Source = bitmap;
                 ExportSelectedBtn.IsEnabled = true;
                 DeleteBtn.IsEnabled = true;
-                PhotoInfoText.Text = item.FileName;
+                PhotoInfoText.Text = BuildPhotoInfoText(item);
                 PhotoSizeText.Text = item.FileSizeText;
+                ApplyMetaExtraText(item);
             }
             else
             {
@@ -395,10 +468,11 @@ namespace WheelerPhotoParlour.Views
                 DeleteBtn.IsEnabled = false;
                 PhotoInfoText.Text = T("NoPhotoSelected");
                 PhotoSizeText.Text = "";
+                PhotoMetaExtraText.Visibility = Visibility.Collapsed;
             }
         }
 
-        // ============ 多选勾选（自选冲印用） ============
+        // ============ 多选勾选 ============
 
         private void OnSelectAllClick(object sender, RoutedEventArgs e)
         {
@@ -412,7 +486,7 @@ namespace WheelerPhotoParlour.Views
 
         private void OnThumbClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            // 不在勾选模式时，点缩略图只用于切换右侧预览，不处理勾选，也不拦截事件冒泡
+            // 非勾选模式时，点击缩略图只切换预览，不处理勾选
             if (!_isCheckMode) return;
 
             if (sender is FrameworkElement element && element.DataContext is PhotoItem item)
@@ -420,14 +494,14 @@ namespace WheelerPhotoParlour.Views
                 item.IsSelected = !item.IsSelected;
                 UpdateCheckedCountText();
 
-                // 若不是全部都勾选了，"全选"框应自动取消勾选，避免显示不一致
+                // 若未全部勾选，取消全选框
                 if (_photos.Count > 0 && _photos.Any(p => !p.IsSelected))
                 {
                     SelectAllCheck.IsChecked = false;
                 }
             }
 
-            // 勾选模式下，点击只用于勾选，不切换右侧预览，避免误操作
+            // 勾选模式下点击只用于勾选，不切换预览
             e.Handled = true;
         }
 
@@ -439,7 +513,7 @@ namespace WheelerPhotoParlour.Views
                 : "";
         }
 
-        // ============ 导出全部（打包付梓） ============
+        // ============ 导出全部 ============
 
         private void OnExportAllClick(object sender, RoutedEventArgs e)
         {
@@ -449,12 +523,12 @@ namespace WheelerPhotoParlour.Views
             if (dialog.ShowDialog() != true) return;
 
             if (dialog.ExportAsZip)
-                ExportAsZip(_photos.ToList());
+                ExportAsZip(_photos.ToList(), dialog.GroupByLocation, dialog.TimestampMode);
             else
-                ExportToFolder(_photos.ToList());
+                ExportToFolder(_photos.ToList(), dialog.GroupByLocation, dialog.TimestampMode);
         }
 
-        // ============ 自选冲印（勾选模式开关） ============
+        // ============ 自选冲印 ============
 
         private void OnExportCheckedClick(object sender, RoutedEventArgs e)
         {
@@ -464,7 +538,7 @@ namespace WheelerPhotoParlour.Views
                 return;
             }
 
-            // 已在勾选模式下再次点击：退出勾选模式，若有勾选项则弹出导出方式询问
+            // 已在勾选模式：退出并导出已勾选项
             var checkedPhotos = _photos.Where(p => p.IsSelected).ToList();
             ExitCheckMode();
 
@@ -474,9 +548,9 @@ namespace WheelerPhotoParlour.Views
             if (dialog.ShowDialog() != true) return;
 
             if (dialog.ExportAsZip)
-                ExportAsZip(checkedPhotos);
+                ExportAsZip(checkedPhotos, dialog.GroupByLocation, dialog.TimestampMode);
             else
-                ExportToFolder(checkedPhotos);
+                ExportToFolder(checkedPhotos, dialog.GroupByLocation, dialog.TimestampMode);
         }
 
         private void EnterCheckMode()
@@ -487,7 +561,7 @@ namespace WheelerPhotoParlour.Views
             SelectAllCheck.Visibility = Visibility.Visible;
             StatusText.Text = T("CheckModeHint");
 
-            // 禁用其余操作按钮，避免在自选挑选过程中误触导致整批导出/删除等意外操作
+            // 禁用其余按钮，避免误触
             ExportAllBtn.IsEnabled = false;
             ExportSelectedBtn.IsEnabled = false;
             DeleteBtn.IsEnabled = false;
@@ -502,7 +576,7 @@ namespace WheelerPhotoParlour.Views
             ExportCheckedBtn.Style = (Style)FindResource("AppButton");
             SelectAllCheck.Visibility = Visibility.Collapsed;
 
-            // 退出勾选模式时清空所有勾选状态，避免下次进入模式时残留上次的选择造成困惑
+            // 清空勾选，避免残留
             foreach (var photo in _photos)
             {
                 photo.IsSelected = false;
@@ -511,7 +585,7 @@ namespace WheelerPhotoParlour.Views
             UpdateCheckedCountText();
             StatusText.Text = T("StatusReady");
 
-            // 恢复被禁用的按钮，各按钮按其原本的可用性条件还原，而非一律设为true
+            // 按各按钮原本的可用性条件还原，不一律设为true
             ExportAllBtn.IsEnabled = _photos.Count > 0;
             RefreshBtn.IsEnabled = true;
             SelectSourceBtn.IsEnabled = true;
@@ -520,7 +594,40 @@ namespace WheelerPhotoParlour.Views
             DeleteBtn.IsEnabled = hasPreviewSelection;
         }
 
-        private void ExportAsZip(List<PhotoItem> photos)
+        // ============ 导出命名 ============
+
+        /// <summary>
+        /// 生成导出目标路径。命名格式"地点_时间.jpg"，地点解析失败回退为占位名。
+        /// 同批次内重名自动加 _2、_3 后缀防止覆盖。
+        /// </summary>
+        private Dictionary<PhotoItem, string> BuildExportNames(List<PhotoItem> photos, bool groupByLocation, bool useZipSeparator, string timestampMode)
+        {
+            var unknownLabel = T("UnknownLocationFolder");
+            var usedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var result = new Dictionary<PhotoItem, string>();
+            var separator = useZipSeparator ? "/" : Path.DirectorySeparatorChar.ToString();
+
+            foreach (var item in photos)
+            {
+                var dir = groupByLocation ? item.GetLocationFolderName(unknownLabel) : "";
+                var baseName = item.GetExportBaseName(unknownLabel, timestampMode);
+
+                var finalName = baseName;
+                var counter = 2;
+                while (!usedKeys.Add($"{dir}{separator}{finalName}".ToLowerInvariant()))
+                {
+                    finalName = $"{baseName}_{counter}";
+                    counter++;
+                }
+
+                var relativePath = string.IsNullOrEmpty(dir) ? $"{finalName}.jpg" : $"{dir}{separator}{finalName}.jpg";
+                result[item] = relativePath;
+            }
+
+            return result;
+        }
+
+        private void ExportAsZip(List<PhotoItem> photos, bool groupByLocation, string timestampMode)
         {
             using var sfd = new SaveFileDialog
             {
@@ -537,26 +644,34 @@ namespace WheelerPhotoParlour.Views
                 return;
             }
 
+            var entryNameByItem = BuildExportNames(photos, groupByLocation, useZipSeparator: true, timestampMode);
+
             var total = photos.Count;
             var success = 0;
             var fail = 0;
 
             try
             {
-                using var archive = ZipFile.Open(sfd.FileName, ZipArchiveMode.Create);
-                for (int i = 0; i < photos.Count; i++)
+                // 确保 ZIP 在 MessageBox 弹出前已关闭
+                using (var archive = ZipFile.Open(sfd.FileName, ZipArchiveMode.Create))
                 {
-                    var item = photos[i];
-                    StatusText.Text = T("StatusExporting") + $" ({i + 1}/{total})";
-                    System.Windows.Forms.Application.DoEvents();
-
-                    try
+                    for (int i = 0; i < photos.Count; i++)
                     {
-                        archive.CreateEntryFromFile(item.CachePath, Path.GetFileName(item.CachePath));
-                        success++;
+                        var item = photos[i];
+                        StatusText.Text = T("StatusExporting") + $" ({i + 1}/{total})";
+                        System.Windows.Forms.Application.DoEvents();
+
+                        try
+                        {
+                            archive.CreateEntryFromFile(item.CachePath, entryNameByItem[item]);
+                            success++;
+                        }
+                        catch { fail++; }
                     }
-                    catch { fail++; }
                 }
+
+                // ZIP 已关闭，可以安全弹窗
+                ApplyRealCaptureTimestamp(photos, timestampMode, sfd.FileName);
 
                 StatusText.Text = T("StatusReady");
                 string zipSummary = LocalizationService.CurrentLanguage == AppLanguage.Chinese
@@ -582,7 +697,7 @@ namespace WheelerPhotoParlour.Views
             }
         }
 
-        private void ExportToFolder(List<PhotoItem> photos)
+        private void ExportToFolder(List<PhotoItem> photos, bool groupByLocation, string timestampMode)
         {
             using var fbd = new FolderBrowserDialog { Description = T("SelectFolderTitle") };
             if (fbd.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
@@ -593,13 +708,15 @@ namespace WheelerPhotoParlour.Views
                 return;
             }
 
+            var relativePathByItem = BuildExportNames(photos, groupByLocation, useZipSeparator: false, timestampMode);
+
             var total = photos.Count;
             var success = 0;
             var fail = 0;
             var overwrite = false;
 
             var existing = photos
-                .Select(p => Path.Combine(fbd.SelectedPath, Path.GetFileName(p.CachePath)))
+                .Select(p => Path.Combine(fbd.SelectedPath, relativePathByItem[p]))
                 .Where(File.Exists)
                 .ToList();
 
@@ -623,17 +740,22 @@ namespace WheelerPhotoParlour.Views
 
                 try
                 {
-                    var target = Path.Combine(fbd.SelectedPath, Path.GetFileName(item.CachePath));
+                    var target = Path.Combine(fbd.SelectedPath, relativePathByItem[item]);
+                    var targetDir = Path.GetDirectoryName(target);
+                    if (!string.IsNullOrEmpty(targetDir)) Directory.CreateDirectory(targetDir);
+
                     File.Copy(item.CachePath, target, overwrite);
                     success++;
                 }
                 catch { fail++; }
             }
 
+            ApplyRealCaptureTimestamp(photos, timestampMode, fbd.SelectedPath);
+
             StatusText.Text = T("StatusReady");
             string folderSummary = LocalizationService.CurrentLanguage == AppLanguage.Chinese
-                ? $"成功：{success} 帧 / 失手：{fail} 帧"
-                : $"Succeeded: {success} / Failed: {fail}";
+                ? $"成功：{success} 帧 / 失手：{fail} 帧\n安放之处：{fbd.SelectedPath}"
+                : $"Succeeded: {success} / Failed: {fail}\nDelivered to: {fbd.SelectedPath}";
             System.Windows.MessageBox.Show(
                 T("ExportSuccessTitle") + "\n\n" + T("ExportSuccessSubtitle") + "\n\n" + folderSummary,
                 T("ExportResultTitle"),
@@ -646,14 +768,63 @@ namespace WheelerPhotoParlour.Views
             }
         }
 
+        /// <summary>
+        /// 将真实拍摄时间写入导出文件的文件系统时间戳。
+        /// </summary>
+        private static void ApplyRealCaptureTimestamp(List<PhotoItem> photos, string timestampMode, string basePath)
+        {
+            if (timestampMode != "RealTime") return;
+
+            foreach (var item in photos)
+            {
+                var timestamp = GetTimestampForExport(item, timestampMode);
+                if (timestamp == null) continue;
+
+                try
+                {
+                    // ZIP导出时basePath是ZIP文件路径，无法设内部条目时间戳
+                    // 文件夹导出时basePath是目标文件夹
+                    if (Directory.Exists(basePath))
+                    {
+                        // 查找对应的导出文件
+                        var exportedFiles = Directory.GetFiles(basePath, "*.jpg", System.IO.SearchOption.AllDirectories);
+                        foreach (var exportedFile in exportedFiles)
+                        {
+                            var fi = new FileInfo(exportedFile);
+                            if (fi.CreationTime > DateTime.Now.AddMinutes(5)) continue;
+                            File.SetCreationTime(exportedFile, timestamp.Value);
+                            break;
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>根据时间戳模式获取导出时间戳。</summary>
+        private static DateTime? GetTimestampForExport(PhotoItem item, string timestampMode)
+        {
+            if (timestampMode == "RealTime")
+            {
+                return item.RealWorldDateTime ?? item.CreatedTime;
+            }
+            return item.GameDateTime ?? item.CreatedTime;
+        }
+
         private void OnExportSelectedClick(object sender, RoutedEventArgs e)
         {
             if (PhotoList.SelectedItem is not PhotoItem item) return;
 
+            // 先弹出 ExportModeDialog（单帧模式），让用户选时间戳来源
+            var dialog = new ExportModeDialog { Owner = this, IsSingleMode = true };
+            if (dialog.ShowDialog() != true) return;
+
+            var defaultName = item.GetExportBaseName(T("UnknownLocationFolder"), dialog.TimestampMode) + ".jpg";
+
             using var sfd = new SaveFileDialog
             {
                 Title = T("SaveSingleTitle"),
-                FileName = Path.GetFileName(item.CachePath),
+                FileName = defaultName,
                 Filter = T("SaveSingleFilter")
             };
 
@@ -668,6 +839,14 @@ namespace WheelerPhotoParlour.Views
                 try
                 {
                     File.Copy(item.CachePath, sfd.FileName, true);
+
+                    // 如果用户选了真实世界时间，设置导出文件的创建时间
+                    var timestamp = GetTimestampForExport(item, dialog.TimestampMode);
+                    if (timestamp != null && dialog.TimestampMode == "RealTime")
+                    {
+                        try { File.SetCreationTime(sfd.FileName, timestamp.Value); } catch { }
+                    }
+
                     System.Windows.MessageBox.Show(
                         T("ExportSuccessTitle") + "\n\n" + T("ExportSuccessSubtitle"),
                         T("InfoTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
@@ -705,7 +884,7 @@ namespace WheelerPhotoParlour.Views
                 MessageBoxImage.Warning);
         }
 
-        /// <summary>打开文件资源管理器并选中指定文件，让用户能立刻看到刚导出的成果</summary>
+        /// <summary>打开资源管理器并选中指定文件。</summary>
         private static void OpenExplorerAndSelectFile(string fullFilePath)
         {
             try
@@ -715,11 +894,11 @@ namespace WheelerPhotoParlour.Views
             }
             catch
             {
-                // 打开资源管理器失败（例如非Windows环境）时静默忽略，不影响导出本身已经成功的结果
+                // 非Windows环境静默忽略
             }
         }
 
-        /// <summary>打开指定文件夹，用于"逐帧导出到文件夹"完成后让用户直接看到所有导出文件</summary>
+        /// <summary>打开指定文件夹。</summary>
         private static void OpenExplorerFolder(string folderPath)
         {
             try
@@ -729,11 +908,11 @@ namespace WheelerPhotoParlour.Views
             }
             catch
             {
-                // 同上，静默忽略
+                // 静默忽略
             }
         }
 
-        // ============ 删除单张（焚毁此帧） ============
+        // ============ 删除单张 ============
 
         private void OnDeleteClick(object sender, RoutedEventArgs e)
         {

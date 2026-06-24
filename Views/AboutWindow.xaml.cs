@@ -29,7 +29,7 @@ namespace WheelerPhotoParlour.Views
 
             Title = T("AboutWindowTitle");
             TitleTextBlock.Text = T("AppTitle");
-            VersionTextBlock.Text = "Version 1.0";
+            VersionTextBlock.Text = "Version 1.1.0";
 
             DesignLabelText.Text = isChinese ? "项目发起与设计：" : "Concept & Design:";
             CodeHostLabelText.Text = isChinese ? "代码托管：" : "Code Hosting:";
@@ -66,7 +66,7 @@ namespace WheelerPhotoParlour.Views
             catch { }
         }
 
-        /// <summary>点击关于页中的链接时，用系统默认浏览器打开</summary>
+        /// <summary>点击链接时用系统默认浏览器打开。</summary>
         private void OnHyperlinkRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             try
@@ -79,7 +79,7 @@ namespace WheelerPhotoParlour.Views
             }
             catch
             {
-                // 调起浏览器失败时静默忽略，不影响关于窗口本身的正常使用
+                // 调起浏览器失败，静默忽略
             }
 
             e.Handled = true;

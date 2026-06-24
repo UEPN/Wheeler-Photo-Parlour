@@ -161,15 +161,21 @@
                     <!-- 当前照片信息 -->
                     <Border Grid.Row="1" Background="{StaticResource SurfaceBrush}" 
                             BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="0,2,0,0" Padding="10">
-                        <Grid>
-                            <TextBlock x:Name="PhotoInfoText" 
-                                       Foreground="{StaticResource TextSecondaryBrush}" FontSize="13"
-                                       Text="尚未挑选任何底片" VerticalAlignment="Center"
-                                       TextTrimming="CharacterEllipsis"/>
-                            <TextBlock x:Name="PhotoSizeText" 
-                                       Foreground="{StaticResource AccentBrush}" FontSize="13"
-                                       Text="" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        </Grid>
+                        <StackPanel>
+                            <Grid>
+                                <TextBlock x:Name="PhotoInfoText" 
+                                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="13"
+                                           Text="尚未挑选任何底片" VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock x:Name="PhotoSizeText" 
+                                           Foreground="{StaticResource AccentBrush}" FontSize="13"
+                                           Text="" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <TextBlock x:Name="PhotoMetaExtraText"
+                                       Foreground="{StaticResource AccentBrush}" FontSize="12"
+                                       Margin="0,4,0,0" TextWrapping="Wrap"
+                                       Text="" Visibility="Collapsed"/>
+                        </StackPanel>
                     </Border>
                 </Grid>
             </Border>

@@ -9,18 +9,14 @@ namespace WheelerPhotoParlour.Services
         English
     }
 
-    /// <summary>
-    /// 惠勒照相馆 / Wheeler Photo Parlour 的双语文案中心。
-    /// 文案风格参照游戏内 "Wheeler, Rawson and Co." 邮购公司的
-    /// 西部牛仔式幽默自嘲 + 老式商业目录腔调。
-    /// </summary>
+    /// <summary>双语文案中心。</summary>
     public static class LocalizationService
     {
         public static AppLanguage CurrentLanguage { get; private set; } = AppLanguage.Chinese;
 
         public static event Action? LanguageChanged;
 
-        /// <summary>程序启动时调用：从已加载的 ConfigService.Config.Language 恢复上次选择的语言。</summary>
+        /// <summary>从配置恢复上次选择的语言。</summary>
         public static void RestoreFromConfig()
         {
             var saved = ConfigService.Config.Language;
@@ -50,16 +46,16 @@ namespace WheelerPhotoParlour.Services
         }
 
         // ============================================================
-        // 中文文案：惠勒照相馆
+        // 中文文案
         // ============================================================
         private static readonly Dictionary<string, string> Chinese = new()
         {
-            // 1. 软件框架与基础导航
+            // 框架 & 导航
             ["AppTitle"] = "惠勒照相馆",
             ["AboutBtn"] = "📜 本馆信誉",
             ["AboutBtnTip"] = "惠勒公司的百年信誉（关于项目）",
 
-            // 2. 核心操作功能区（按钮短文案 + 详细说明走 Tooltip）
+            // 操作按钮
             ["AutoScanBtn"] = "🔍 搜寻相机袋",
             ["AutoScanBtnTip"] = "搜寻马背上的相机袋（一键全自动扫描）",
             ["ManualPathBtn"] = "📁 翻看账本",
@@ -72,18 +68,18 @@ namespace WheelerPhotoParlour.Services
             ["ExportSelectedBtn"] = "🖨️ 冲印此帧",
             ["ExportSelectedBtnTip"] = "冲印此帧（导出当前选中的这一张照片）",
 
-            // 3. 状态栏与进度提示
+            // 状态栏
             ["StatusInitializing"] = "⚙️ 正在为您擦拭镜头，请稍候...",
             ["StatusScanning"] = "🤠 正在翻箱倒柜搜寻您的二进制存档文件...",
             ["StatusExporting"] = "🧪 正在暗房中用银盐工艺冲洗照片，请勿关闭电源...",
 
-            // 4. 成功与惊喜弹窗
+            // 弹窗
             ["ScanSuccessTitle"] = "好极了！我们在西部荒野中找到了 {0} 张珍贵的记忆底片！",
             ["ScanSuccessSubtitle"] = "每一张都记录了您驰骋荒野的峥嵘岁月。",
             ["ExportSuccessTitle"] = "冲印完成！高精度纸质相片已安全送达您的桌面！",
             ["ExportSuccessSubtitle"] = "惠勒劳森公司祝您旅途愉快，愿您的西部牛仔梦永不褪色！",
 
-            // 5. 报错与尴尬弹窗
+            // 报错
             ["NoPhotosFoundTitle"] = "该死，您的相机袋空空如也，是忘记给高级相机装胶卷了吗？",
             ["CheckModeHint"] = "请点选您要的底片，挑好后再点一次「完成挑选」",
             ["NoPhotosFoundSubtitle"] = "未能自动找到您的照片存档。请确认拍摄记录确实存在，或者尝试【手动选择路径】。",
@@ -91,11 +87,11 @@ namespace WheelerPhotoParlour.Services
             ["InvalidExportPathSubtitle"] = "请重新选择一个安全的路径来存放您的精美影集。",
             ["FileCorruptedTitle"] = "噢，这张底片似乎在某次混战中被泥水泡烂了（文件损坏，无法解析）。",
 
-            // 6. 关于窗口
+            // 关于
             ["AboutCredit"] = "本工具旨在以最优雅、最高效的方式，将模糊陈旧的底片化为清晰相片。\n感谢您光临本馆，愿西部牛仔梦永不褪色。",
-            ["AboutDisclaimer"] = "1. 本软件为基于《荒野大镖客：救赎 2》的同人衍生工具，源代码及编译成品完全免费公开，遵循 GNU General Public License v3.0（GPLv3）开源协议发布。\n\n2. 任何人均可依据 GPLv3 协议自由复制、修改、分发或引用本项目代码，亦可将其用于商业用途；但基于本项目代码的任何衍生作品在分发时，必须同样以 GPLv3 协议开源，保留原始版权声明并提供对应源代码。作者不对衍生版本的内容或后果承担任何责任。\n\n3. 本软件按“现状”提供，不包含任何明示或暗示的担保。作者不对因使用本工具所导致的任何直接或间接损失（包括但不限于游戏存档损坏、系统崩溃或数据丢失）承担任何责任。使用风险由使用者自行承担。详见随附的 GPLv3 协议全文。",
+            ["AboutDisclaimer"] = "1. 本软件为基于《荒野大镖客：救赎 2》的同人衍生工具，源代码及编译成品完全免费公开，遵循 GNU General Public License v3.0（GPLv3）开源协议发布。\n\n2. 任何人均可依据 GPLv3 协议自由复制、修改、分发或引用本项目代码，亦可将其用于商业用途；但基于本项目代码的任何衍生作品在分发时，必须同样以 GPLv3 协议开源，保留原始版权声明并提供对应源代码。作者不对衍生版本的内容或后果承担任何责任。\n\n3. 本软件按\u201C现状\u201D提供，不包含任何明示或暗示的担保。作者不对因使用本工具所导致的任何直接或间接损失（包括但不限于游戏存档损坏、系统崩溃或数据丢失）承担任何责任。使用风险由使用者自行承担。详见随附的 GPLv3 协议全文。",
 
-            // ---- 以下为衔接现有功能流程所需的补充文案（保持与上方风格一致） ----
+            // ---- 补充文案 ----
             ["LangBtn"] = "EN",
             ["PhotoListTitle"] = "马背上的相机袋",
             ["EmptyPreviewTitle"] = "请从左侧相机袋中，挑一张底片瞧瞧",
@@ -144,22 +140,37 @@ namespace WheelerPhotoParlour.Services
 
             ["SelectSourceFolderTitle"] = "请翻看账本，指认存档所在",
 
+            ["UnknownLocationFolder"] = "无名荒野",
+            ["GroupByLocationOption"] = "按拍摄地点分类整理",
+            ["GroupByLocationOptionTip"] = "把同一地点拍的照片归到同一个文件夹里，文件名也会自动改成「地点_时间」",
+            ["GameDateTimeLabel"] = "🗓️ 故事年代",
+            ["DescriptionLabel"] = "📝 备注",
+
             // 关于窗口
             ["AboutWindowTitle"] = "惠勒公司的百年信誉",
             ["AboutOkBtn"] = "已知悉",
+
+            // 时间戳
+            ["TimestampSourceLabel"] = "时间戳来源",
+            ["TimestampRealOption"] = "真实世界时间",
+            ["TimestampRealOptionTip"] = "使用从文件中解析出的真实拍摄时间作为文件名中的时间戳",
+            ["TimestampGameOption"] = "游戏内时间",
+            ["TimestampGameOptionTip"] = "使用游戏故事年代的时间作为文件名中的时间戳",
+            ["ExportModeTitleSingle"] = "敢问此帧底片，时间戳该用哪个？",
+            ["UnknownTimestamp"] = "未知时间",
         };
 
         // ============================================================
-        // English copy: Wheeler Photo Parlour
+        // English
         // ============================================================
         private static readonly Dictionary<string, string> English = new()
         {
-            // 1. Framework & navigation
+            // Framework & nav
             ["AppTitle"] = "Wheeler Photo Parlour",
             ["AboutBtn"] = "📜 Credibility",
             ["AboutBtnTip"] = "Century-Old Credibility (About Us)",
 
-            // 2. Core operations (short button label + full description via Tooltip)
+            // Buttons
             ["AutoScanBtn"] = "🔍 Inspect Bag",
             ["AutoScanBtnTip"] = "Inspect the Saddlebag (Auto Scan)",
             ["ManualPathBtn"] = "📁 Alt. Ledger",
@@ -172,18 +183,18 @@ namespace WheelerPhotoParlour.Services
             ["ExportSelectedBtn"] = "🖨️ Print This",
             ["ExportSelectedBtnTip"] = "Print This Plate (export the currently selected photo)",
 
-            // 3. Status & progress
+            // Status
             ["StatusInitializing"] = "⚙️ Wiping the camera lens, please hold on...",
             ["StatusScanning"] = "🤠 Scouring through your binary save files...",
             ["StatusExporting"] = "🧪 Developing prints in the darkroom, do not turn off power...",
 
-            // 4. Success dialogs
+            // Dialogs
             ["ScanSuccessTitle"] = "Splendid! Found {0} precious negatives from the Wild West!",
             ["ScanSuccessSubtitle"] = "Each one documents your glorious days riding the open frontier.",
             ["ExportSuccessTitle"] = "Development Complete! High-quality prints delivered safely to your desktop!",
             ["ExportSuccessSubtitle"] = "Wheeler, Rawson & Co. wishes you a pleasant journey. May your cowboy dream never fade!",
 
-            // 5. Error dialogs
+            // Errors
             ["NoPhotosFoundTitle"] = "Dammit, your camera bag is empty. Forgot the film?",
             ["CheckModeHint"] = "Tick the plates you'd like, then click \"Done Checking\" when ready",
             ["NoPhotosFoundSubtitle"] = "No photo saves found automatically. Make sure your photos exist, or try [Manual Path].",
@@ -191,11 +202,11 @@ namespace WheelerPhotoParlour.Services
             ["InvalidExportPathSubtitle"] = "Please select a valid path to store your exquisite photo album.",
             ["FileCorruptedTitle"] = "Oh, this negative seems soaked in mud from some long-forgotten skirmish (File corrupted).",
 
-            // 6. About & disclaimer
+            // About
             ["AboutCredit"] = "This tool aims to turn faded, blurry negatives into clear prints, in the most elegant and efficient way possible.\nThank you for stopping by — may your cowboy dream never fade.",
             ["AboutDisclaimer"] = "1. This software is a fan-made tool based on Red Dead Redemption 2. Its source code and compiled builds are entirely free and public, released under the GNU General Public License v3.0 (GPLv3).\n\n2. Anyone may freely copy, modify, distribute, or reference this project's code under the terms of the GPLv3, including for commercial purposes. However, any derivative work based on this project's code must also be distributed under the GPLv3, must retain the original copyright notice, and must make its corresponding source code available. The author bears no responsibility for the content or consequences of any derivative versions.\n\n3. This software is provided \"as is\", without warranty of any kind, express or implied. The author shall not be liable for any direct or indirect loss arising from the use of this tool, including but not limited to game save corruption, system crashes, or data loss. Use at your own risk. See the accompanying GPLv3 license text for full terms.",
 
-            // ---- Supplementary copy to wire up existing functionality (kept in the same voice) ----
+            // ---- Supplementary ----
             ["LangBtn"] = "中",
             ["PhotoListTitle"] = "The Saddlebag of Negatives",
             ["EmptyPreviewTitle"] = "Pick a negative from the saddlebag, partner",
@@ -244,9 +255,24 @@ namespace WheelerPhotoParlour.Services
 
             ["SelectSourceFolderTitle"] = "Consult the Ledger to Point Us to the Saves",
 
+            ["UnknownLocationFolder"] = "Unnamed Wilds",
+            ["GroupByLocationOption"] = "Group by Filming Location",
+            ["GroupByLocationOptionTip"] = "Sort photos from the same location into one folder, and rename them as \"Location_Time\"",
+            ["GameDateTimeLabel"] = "🗓️ Story Date",
+            ["DescriptionLabel"] = "📝 Note",
+
             // About window
             ["AboutWindowTitle"] = "Century-Old Credibility",
             ["AboutOkBtn"] = "Noted",
+
+            // Timestamp
+            ["TimestampSourceLabel"] = "Timestamp Source",
+            ["TimestampRealOption"] = "Real-World Time",
+            ["TimestampRealOptionTip"] = "Use the real-world capture time parsed from the file as the timestamp in filenames",
+            ["TimestampGameOption"] = "In-Game Time",
+            ["TimestampGameOptionTip"] = "Use the in-game story era time as the timestamp in filenames",
+            ["ExportModeTitleSingle"] = "Which timestamp shall we use for this plate, partner?",
+            ["UnknownTimestamp"] = "Unknown Time",
         };
     }
 }

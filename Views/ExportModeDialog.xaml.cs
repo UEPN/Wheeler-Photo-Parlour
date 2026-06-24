@@ -6,6 +6,9 @@ namespace WheelerPhotoParlour.Views
     public partial class ExportModeDialog : Window
     {
         public bool ExportAsZip => ZipRadio.IsChecked == true;
+        public bool GroupByLocation => GroupByLocationCheck.IsChecked == true;
+        public string TimestampMode => TimestampGameRadio.IsChecked == true ? "GameTime" : "RealTime";
+        public bool IsSingleMode { get; set; }
 
         public ExportModeDialog()
         {
@@ -16,10 +19,30 @@ namespace WheelerPhotoParlour.Views
         {
             string T(string key) => LocalizationService.T(key);
 
-            Title = T("ExportModeTitle");
-            TitleText.Text = T("ExportModeTitle");
-            ZipRadio.Content = T("ExportAsZipOption");
-            FolderRadio.Content = T("ExportToFolderOption");
+            if (IsSingleMode)
+            {
+                Title = T("ExportModeTitleSingle");
+                TitleText.Text = T("ExportModeTitleSingle");
+                ZipRadio.Visibility = Visibility.Collapsed;
+                FolderRadio.Visibility = Visibility.Collapsed;
+                GroupByLocationCheck.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                Title = T("ExportModeTitle");
+                TitleText.Text = T("ExportModeTitle");
+                ZipRadio.Content = T("ExportAsZipOption");
+                FolderRadio.Content = T("ExportToFolderOption");
+                GroupByLocationCheck.Content = T("GroupByLocationOption");
+                GroupByLocationCheck.ToolTip = T("GroupByLocationOptionTip");
+            }
+
+            TimestampLabel.Text = T("TimestampSourceLabel");
+            TimestampRealRadio.Content = T("TimestampRealOption");
+            TimestampRealRadio.ToolTip = T("TimestampRealOptionTip");
+            TimestampGameRadio.Content = T("TimestampGameOption");
+            TimestampGameRadio.ToolTip = T("TimestampGameOptionTip");
+
             OkBtn.Content = T("DialogOk");
             CancelBtn.Content = T("DialogCancel");
         }

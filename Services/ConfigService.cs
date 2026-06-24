@@ -4,9 +4,7 @@ using System.Text.Json;
 
 namespace WheelerPhotoParlour.Services
 {
-    /// <summary>
-    /// 应用设置的读写。使用 JSON 持久化到用户本地数据目录下的单一设置文件中。
-    /// </summary>
+    /// <summary>应用设置读写，JSON持久化。</summary>
     public static class ConfigService
     {
         private static readonly string SettingsFolder = Path.Combine(
@@ -50,7 +48,7 @@ namespace WheelerPhotoParlour.Services
             }
             catch
             {
-                // 设置文件损坏或格式不符时，保留内存中的默认值，不影响程序继续运行
+                // 设置文件损坏时保留默认值
             }
         }
 
@@ -64,20 +62,20 @@ namespace WheelerPhotoParlour.Services
             }
             catch
             {
-                // 写入失败（例如磁盘只读）时静默忽略，不影响主流程
+                // 写入失败静默忽略
             }
         }
     }
 
     public class AppConfig
     {
-        /// <summary>是否为本机首次启动本程序</summary>
+        /// <summary>是否首次启动。</summary>
         public bool FirstRun { get; set; } = true;
 
-        /// <summary>照片存档所在文件夹</summary>
+        /// <summary>照片存档路径。</summary>
         public string SourcePath { get; set; } = "";
 
-        /// <summary>界面语言："zh" 为中文，"en" 为英文。默认中文。</summary>
+        /// <summary>界面语言："zh" / "en"。</summary>
         public string Language { get; set; } = "zh";
     }
 }

@@ -15,8 +15,46 @@ namespace WheelerPhotoParlour.Models
         public string FileName { get; set; } = "";
         public long FileSize { get; set; }
 
+        /// <summary>拍摄地点，解析失败为 null。</summary>
+        public string? LocationTitle { get; set; }
+
+        /// <summary>玩家备注，未写则为 null。</summary>
+        public string? Description { get; set; }
+
+        /// <summary>游戏内世界时间，解析失败为 null。</summary>
+        public DateTime? GameDateTime { get; set; }
+
+        /// <summary>真实世界拍摄时间，解析失败为 null。</summary>
+        public DateTime? RealWorldDateTime { get; set; }
+
+        /// <summary>文件创建时间，命名兜底用。</summary>
+        public DateTime CreatedTime { get; set; }
+
+        /// <summary>生成分类文件夹名，解析失败回退到占位名。</summary>
+        public string GetLocationFolderName(string fallbackLabel)
+        {
+            var sanitized = PhotoService.SanitizeForFileSystem(LocationTitle ?? "");
+            return string.IsNullOrEmpty(sanitized) ? fallbackLabel : sanitized;
+        }
+
+        /// <summary>生成导出基础文件名（"地点_时间"，不含扩展名）。根据timestampMode选时间来源。</summary>
+        public string GetExportBaseName(string fallbackLabel, string timestampMode = "GameTime")
+        {
+            var location = GetLocationFolderName(fallbackLabel);
+            DateTime timestamp;
+            if (timestampMode == "RealTime")
+            {
+                timestamp = RealWorldDateTime ?? (CreatedTime == default ? DateTime.Now : CreatedTime);
+            }
+            else
+            {
+                timestamp = GameDateTime ?? (CreatedTime == default ? DateTime.Now : CreatedTime);
+            }
+            return $"{location}_{timestamp:yyyy-MM-dd_HH-mm-ss}";
+        }
+
         private bool _isSelected;
-        /// <summary>是否被用户勾选，用于"导出勾选项"功能</summary>
+        /// <summary>是否被勾选。</summary>
         public bool IsSelected
         {
             get => _isSelected;
