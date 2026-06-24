@@ -31,7 +31,10 @@ Main Window Preview
 - **Auto Scan** — Automatically locate RDR2 photo save directory
 - **Thumbnail Preview** — Smooth browsing with async loading
 - **High-Resolution Preview** — Click thumbnail to view full photo, F11 for fullscreen
-- **Batch Export** — Pack into ZIP album or export to folder
+- **Location Parsing** — Automatically identify filming location and player notes
+- **Batch Export** — Pack into ZIP album or export to folder, with optional grouping by location
+- **Smart Naming** — Exported files named "Location_Timestamp.jpg"
+- **Timestamp Source** — Choose between real-world time or in-game time for file naming
 - **Selective Printing** — Check negatives you want, export only picks
 - **Single Frame Export** — Export the currently selected photo
 - **Safe Delete** — Move to Recycle Bin, not permanent erase
@@ -76,9 +79,9 @@ Output will be in `bin/Release/net8.0-windows/win-x64/publish/`.
 
 1. **Launch** — Double-click `WheelerPhotoParlour.exe`
 2. **Scan Photos** — Click "Inspect Bag" to auto-locate RDR2 save directory
-3. **Browse** — Left panel "The Saddlebag of Negatives" shows all photo thumbnails, click to preview
+3. **Browse** — Left panel shows all photo thumbnails, click to preview
 4. **Export** — Choose your export method:
-   - "Bulk Print" — Export all photos as ZIP or to a folder
+   - "Bulk Print" — Export all photos, choose ZIP or folder, group by location, timestamp source
    - "Print Checked" — Enter check mode, pick desired negatives then export
    - "Print This" — Export the currently selected single photo
 5. **Delete** — Click "Burn This One" to send unwanted negatives to Recycle Bin
@@ -92,8 +95,25 @@ Output will be in `bin/Release/net8.0-windows/win-x64/publish/`.
 - **Framework**: WPF (.NET 8.0 Windows)
 - **Photo Format**: RDR2's `.PRDR` files are custom format (300-byte game header + standard JPEG data)
 - **Conversion**: Skip first 300 bytes to extract JPEG — no third-party image libraries needed
+- **Metadata Parsing**: Extracts location (TITL), notes (DESC), in-game time (JSON) and real-world capture time from PRDR files
 - **Caching**: Thumbnails use memory + file cache, no re-conversion on second launch
 - **Async Loading**: All image operations run on background threads, UI stays responsive
+
+---
+
+## Changelog
+
+### v1.1.0
+
+- Added location parsing and player notes recognition
+- Added export timestamp source (real-world / in-game time)
+- Added grouping by filming location when exporting
+- Export file naming changed to "Location_Timestamp.jpg"
+- Fixed window restore size issue after fullscreen toggle when maximized
+
+### v1.0.0
+
+- Initial release
 
 ---
 
