@@ -18,7 +18,7 @@
 
 <div align="center">
 
-<img src="https://github.com/user-attachments/assets/d22f44ee-3653-47f9-ad77-928157c93aed" width="600" />
+<img src="https://github.com/user-attachments/assets/7a88c146-92cb-4be9-bd49-4b81c1b27fcb" width="600" />
 
 主界面预览
 
