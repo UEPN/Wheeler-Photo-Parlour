@@ -107,17 +107,13 @@ namespace WheelerPhotoParlour.Views
                 : $"{item.FileName}　📍{item.LocationTitle}";
         }
 
-        /// <summary>游戏内时间、玩家备注（如果有）填到第二行；都没有就收起。</summary>
+        /// <summary>游戏内时间填到第二行；没有就收起。</summary>
         private void ApplyMetaExtraText(PhotoItem item)
         {
             var parts = new List<string>();
             if (item.GameDateTime.HasValue)
             {
                 parts.Add($"{T("GameDateTimeLabel")}：{item.GameDateTime.Value:yyyy-MM-dd HH:mm:ss}");
-            }
-            if (!string.IsNullOrWhiteSpace(item.Description))
-            {
-                parts.Add($"{T("DescriptionLabel")}：{item.Description}");
             }
 
             if (parts.Count == 0)
@@ -345,7 +341,6 @@ namespace WheelerPhotoParlour.Views
                         FileName = Path.GetFileName(file),
                         FileSize = new FileInfo(file).Length,
                         LocationTitle = meta.Title,
-                        Description = meta.Description,
                         GameDateTime = meta.GameDateTime,
                         RealWorldDateTime = meta.RealWorldDateTime,
                         CreatedTime = GetTrustworthyRealTime(file)

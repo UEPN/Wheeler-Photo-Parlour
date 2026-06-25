@@ -17,9 +17,6 @@ namespace WheelerPhotoParlour.Services
         /// <summary>拍摄地点，解析失败为 null。</summary>
         public string? Title { get; set; }
 
-        /// <summary>玩家备注，未写则为 null。</summary>
-        public string? Description { get; set; }
-
         /// <summary>游戏内世界时间，非文件创建时间。</summary>
         public DateTime? GameDateTime { get; set; }
 
@@ -71,14 +68,12 @@ namespace WheelerPhotoParlour.Services
         //   [文件头] → "JPEG" + 长度 + JPEG图片数据
         //   → "JSON" + 长度 + JSON（坐标/时间等）
         //   → "TITL" + 长度 + UTF-8 地点名
-        //   → "DESC" + 长度 + UTF-8 备注
         //   → "JEND"（文件末尾）
 
-        // 缓冲区容量上限（真实样本：TITL/DESC=256，JSON=3072）
+        // 缓冲区容量上限（真实样本：TITL=256，JSON=3072）
         private const int MaxDeclaredBufferBytes = 8192;
 
         private static readonly byte[] TitleMarker = Encoding.ASCII.GetBytes("TITL");
-        private static readonly byte[] DescMarker = Encoding.ASCII.GetBytes("DESC");
         private static readonly byte[] JsonMarker = Encoding.ASCII.GetBytes("JSON");
         private static readonly byte[] JpegMarker = Encoding.ASCII.GetBytes("JPEG");
 
@@ -95,7 +90,6 @@ namespace WheelerPhotoParlour.Services
                 if (bytes.Length < 16) return result;
 
                 result.Title = TryDecodeMarkerText(bytes, TitleMarker, fileName, "TITL(地点)");
-                result.Description = TryDecodeMarkerText(bytes, DescMarker, fileName, "DESC(备注)");
                 result.GameDateTime = TryParseGameDateTime(bytes, fileName);
                 result.RealWorldDateTime = TryParseRealWorldDateTime(bytes, fileName);
             }
@@ -153,7 +147,7 @@ namespace WheelerPhotoParlour.Services
             }
         }
 
-        /// <summary>查找4字节标记，按"标记+4字节长度+缓冲区"解码文本。TITL/DESC共用。</summary>
+        /// <summary>查找4字节标记，按"标记+4字节长度+缓冲区"解码文本。</summary>
         private static string? TryDecodeMarkerText(byte[] bytes, byte[] marker, string fileName, string label)
         {
             var markerIndex = FindMarker(bytes, marker, 0, bytes.Length);
@@ -186,8 +180,7 @@ namespace WheelerPhotoParlour.Services
             }
             else
             {
-                // 空缓冲区（没写备注）是正常情况
-                Debug.WriteLine($"[PhotoMeta] {fileName}: {label} 缓冲区为空或不含有效文字（如果是 DESC 备注，这通常只是玩家没写而已）");
+                Debug.WriteLine($"[PhotoMeta] {fileName}: {label} 缓冲区为空或不含有效文字");
             }
             return candidate;
         }
@@ -252,7 +245,7 @@ namespace WheelerPhotoParlour.Services
                 // 截断到第一个\0，避免填充字节混入
                 var nullIndex = Array.IndexOf<byte>(bytes, 0, start, length);
                 var actualLen = nullIndex >= 0 ? nullIndex - start : length;
-                if (actualLen <= 0) return null; // 空缓冲区（没写备注等）属于正常情况
+                if (actualLen <= 0) return null; // 空缓冲区属于正常情况
 
                 var text = Encoding.UTF8.GetString(bytes, start, actualLen).Trim();
                 if (string.IsNullOrWhiteSpace(text)) return null;

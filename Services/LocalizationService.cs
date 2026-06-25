@@ -144,7 +144,6 @@ namespace WheelerPhotoParlour.Services
             ["GroupByLocationOption"] = "按拍摄地点分类整理",
             ["GroupByLocationOptionTip"] = "把同一地点拍的照片归到同一个文件夹里，文件名也会自动改成「地点_时间」",
             ["GameDateTimeLabel"] = "🗓️ 故事年代",
-            ["DescriptionLabel"] = "📝 备注",
 
             // 关于窗口
             ["AboutWindowTitle"] = "惠勒公司的百年信誉",
@@ -259,7 +258,6 @@ namespace WheelerPhotoParlour.Services
             ["GroupByLocationOption"] = "Group by Filming Location",
             ["GroupByLocationOptionTip"] = "Sort photos from the same location into one folder, and rename them as \"Location_Time\"",
             ["GameDateTimeLabel"] = "🗓️ Story Date",
-            ["DescriptionLabel"] = "📝 Note",
 
             // About window
             ["AboutWindowTitle"] = "Century-Old Credibility",

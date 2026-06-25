@@ -18,9 +18,6 @@ namespace WheelerPhotoParlour.Models
         /// <summary>拍摄地点，解析失败为 null。</summary>
         public string? LocationTitle { get; set; }
 
-        /// <summary>玩家备注，未写则为 null。</summary>
-        public string? Description { get; set; }
-
         /// <summary>游戏内世界时间，解析失败为 null。</summary>
         public DateTime? GameDateTime { get; set; }
 
