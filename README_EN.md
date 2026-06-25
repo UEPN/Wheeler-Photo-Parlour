@@ -31,7 +31,7 @@ Main Window Preview
 - **Auto Scan** — Automatically locate RDR2 photo save directory
 - **Thumbnail Preview** — Smooth browsing with async loading
 - **High-Resolution Preview** — Click thumbnail to view full photo, F11 for fullscreen
-- **Location Parsing** — Automatically identify filming location and player notes
+- **Location Parsing** — Automatically identify filming location
 - **Batch Export** — Pack into ZIP album or export to folder, with optional grouping by location
 - **Smart Naming** — Exported files named "Location_Timestamp.jpg"
 - **Timestamp Source** — Choose between real-world time or in-game time for file naming
@@ -95,7 +95,7 @@ Output will be in `bin/Release/net8.0-windows/win-x64/publish/`.
 - **Framework**: WPF (.NET 8.0 Windows)
 - **Photo Format**: RDR2's `.PRDR` files are custom format (300-byte game header + standard JPEG data)
 - **Conversion**: Skip first 300 bytes to extract JPEG — no third-party image libraries needed
-- **Metadata Parsing**: Extracts location (TITL), notes (DESC), in-game time (JSON) and real-world capture time from PRDR files
+- **Metadata Parsing**: Extracts location (TITL), in-game time (JSON) and real-world capture time from PRDR files
 - **Caching**: Thumbnails use memory + file cache, no re-conversion on second launch
 - **Async Loading**: All image operations run on background threads, UI stays responsive
 
@@ -105,7 +105,7 @@ Output will be in `bin/Release/net8.0-windows/win-x64/publish/`.
 
 ### v1.1.0
 
-- Added location parsing and player notes recognition
+- Added location parsing
 - Added export timestamp source (real-world / in-game time)
 - Added grouping by filming location when exporting
 - Export file naming changed to "Location_Timestamp.jpg"
